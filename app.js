@@ -88,7 +88,7 @@ app.get("/", async (req, res) => {
         console.log(err,'error in finding')
     });
     //   close database
-    await closeDatabase();
+   
 });
 
 //**************************************************************************************************************************************/
@@ -111,7 +111,7 @@ app.post("/",async (req, res) => {
     console.log(err,'got an error in adding')
         });;
         // closing it 
-        await closeDatabase()
+       await closeDatabase()
         res.redirect("/");
     }
     else{
@@ -120,7 +120,7 @@ app.post("/",async (req, res) => {
             value.items.push(itemAdded);
             await value.save();
             // closing it 
-            await closeDatabase()
+         
             res.redirect("/"+listLocation);
         }).catch((err)=>{
             console.log(err,'error in finding')
@@ -144,7 +144,7 @@ app.post('/delete',async (req,res)=>{
 console.log(err,'got an error in deleting to mongoDB server')
     });
      // closing it 
-     await closeDatabase()
+   
     res.redirect('/')
    }
    else{
@@ -154,7 +154,7 @@ console.log(err,'got an error in deleting to mongoDB server')
 console.log(err,'got an error in find and update to mongoDB server')
     });
      // closing it 
-     await closeDatabase()
+    
     res.redirect('/'+ onList)}
 })
 
@@ -190,7 +190,8 @@ await list.findOne({name:listName}).then(async (value)=>{
     }).catch((err)=>{
         console.log(err,'error in finding!')
     })
-await closeDatabase()
+    await closeDatabase()
+
 })
 //**************************************************************************************************************************************/
 
