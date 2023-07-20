@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo list</title>
+    <link rel="shortcut icon" href="/images/favicon (2).ico" type="image/x-icon">
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+   
+    <div class="box" id="heading"><h1><%=todaysDay%></h1></div>
+    <div class="box">
+        
+          
+            <% newItems.forEach((elem)=>{%>
+              <form action="/delete" method="post" style="border-bottom: 1px solid #F1F1F1;">
+              <div class="item">
+                <input type="checkbox" name='deleteCheckbox' value="<%= elem._id %>" onchange="this.form.submit()"  >
+            <p style="display: inline-block;"><%=(elem.name)%></p>
+          </div>
+          <input type="hidden" name="currentlist" value='<%= thisList %>'>
+        </form>
+             
+             <% }) %>
+              
+    
+    
+    <form class="item" action="/" method="post">
+        <input type="text" name="listItem" placeholder="new item" autocomplete="off">
+        <button type="submit" name="button" value="<%= listBtn %>">+</button>
+    </form>
+</div>
+    <footer>
+      <h4>Copyright-<%= year %> Jatin shivlani</h4>
+    </footer>
+   
+  </body>
+</html>
