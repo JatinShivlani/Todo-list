@@ -37,10 +37,18 @@ const todoItem = mongoose.model("todoItem", todoSchema);
 
 async function runDatabase() {
     const uri = `mongodb+srv://${username}:${password}@cluster0.lfqfli0.mongodb.net/TodoList`;
-    await mongoose.connect(uri, { useNewUrlParser: true });
+    await mongoose.connect(uri, { useNewUrlParser: true }).then(()=>{
+        console.log('you got connected to mongoDB server')
+    }).catch((err)=>{
+console.log(err,'got an error in connecting to mongoDB server')
+    });
 }
 async function closeDatabase() {
-    await mongoose.connection.close();
+    await mongoose.connection.close().then(()=>{
+        console.log('you got disconnected to mongoDB server')
+    }).catch((err)=>{
+console.log(err,'got an error in disconnecting to mongoDB server')
+    });;
 }
 // }
 //
@@ -76,6 +84,8 @@ app.get("/", async (req, res) => {
             res.render("list", { todaysDay: date, newItems: value, year: year,listBtn:'Today', thisList:'Today'});
         }
         // }
+    }).catch((err)=>{
+        console.log(err,'error in finding')
     });
     //   close database
     await closeDatabase();
@@ -95,7 +105,11 @@ app.post("/",async (req, res) => {
     if (listLocation=='Today') {
        
         // inserting a new item into database as a document
-        await itemAdded.save();
+        await itemAdded.save().then(()=>{
+            console.log('added')
+        }).catch((err)=>{
+    console.log(err,'got an error in adding')
+        });;
         // closing it 
         await closeDatabase()
         res.redirect("/");
@@ -108,6 +122,8 @@ app.post("/",async (req, res) => {
             // closing it 
             await closeDatabase()
             res.redirect("/"+listLocation);
+        }).catch((err)=>{
+            console.log(err,'error in finding')
         })
     }
 });
@@ -122,13 +138,21 @@ app.post('/delete',async (req,res)=>{
    let onList=(req.body.currentlist)
    
    if(onList=='Today'){
-    await todoItem.deleteOne({_id:deleteId})
+    await todoItem.deleteOne({_id:deleteId}).then(()=>{
+        console.log('deleted ')
+    }).catch((err)=>{
+console.log(err,'got an error in deleting to mongoDB server')
+    });
      // closing it 
      await closeDatabase()
     res.redirect('/')
    }
    else{
-     await list.findOneAndUpdate({name:onList},{$pull:{items:{_id:deleteId}}})
+     await list.findOneAndUpdate({name:onList},{$pull:{items:{_id:deleteId}}}).then(()=>{
+        console.log('found it and updated it')
+    }).catch((err)=>{
+console.log(err,'got an error in find and update to mongoDB server')
+    });
      // closing it 
      await closeDatabase()
     res.redirect('/'+ onList)}
@@ -163,6 +187,8 @@ await list.findOne({name:listName}).then(async (value)=>{
         res.render("list", { todaysDay:modifiedListName , newItems: value.items, year: year ,listBtn:value.name, thisList:value.name})
         
     }
+    }).catch((err)=>{
+        console.log(err,'error in finding!')
     })
 await closeDatabase()
 })
