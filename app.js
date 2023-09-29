@@ -41,15 +41,10 @@ async function runDatabase() {
         console.log('you got connected to mongoDB server')
     }).catch((err)=>{
 console.log(err,'got an error in connecting to mongoDB server')
-    });
+});
 }
-async function closeDatabase() {
-    await mongoose.connection.close().then(()=>{
-        console.log('you got disconnected to mongoDB server')
-    }).catch((err)=>{
-console.log(err,'got an error in disconnecting to mongoDB server')
-    });;
-}
+runDatabase();
+
 // }
 //
 // default items of the list {
@@ -70,7 +65,6 @@ const defaultItems=[item1, item2, item3]
 /** Get request **/
 app.get("/", async (req, res) => {
     // staring database
-    await runDatabase();
     await todoItem.find({}).then(async (value) => {
         // if default items are not present in the database then create {
         if (value.length === 0) {
@@ -87,7 +81,6 @@ app.get("/", async (req, res) => {
     }).catch((err)=>{
         console.log(err,'error in finding')
     });
-    //   close database
    
 });
 
@@ -98,7 +91,7 @@ app.post("/",async (req, res) => {
     let itemValue = req.body.listItem;
     let listLocation=(req.body.button)
     // again starting the MongoDB server
-    await runDatabase()
+   
     let itemAdded = new todoItem({
         name: itemValue,
     });
@@ -110,8 +103,7 @@ app.post("/",async (req, res) => {
         }).catch((err)=>{
     console.log(err,'got an error in adding')
         });;
-        // closing it 
-       await closeDatabase()
+    
         res.redirect("/");
     }
     else{
@@ -133,8 +125,7 @@ app.post("/",async (req, res) => {
 // another post request for deleting item
 app.post('/delete',async (req,res)=>{
      //  // again starting the MongoDB server
-     await runDatabase()
-   let deleteId=(req.body.deleteCheckbox)
+        let deleteId=(req.body.deleteCheckbox)
    let onList=(req.body.currentlist)
    
    if(onList=='Today'){
@@ -169,7 +160,7 @@ const listSchema = mongoose.Schema({
 const list = mongoose.model("list", listSchema);
 // 
 app.get('/:input',async (req,res)=>{
-    await runDatabase()
+    
     const listName=(req.params.input)
    const modifiedListName=listName.slice(0,1).toUpperCase()+listName.slice(1,listName.length).toLowerCase()
 
@@ -190,7 +181,6 @@ await list.findOne({name:listName}).then(async (value)=>{
     }).catch((err)=>{
         console.log(err,'error in finding!')
     })
-    await closeDatabase()
 
 })
 //**************************************************************************************************************************************/
